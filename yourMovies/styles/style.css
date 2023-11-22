@@ -113,7 +113,7 @@ body {
 .table td:not(:last-child) {
   text-align: center;
   padding: 0.8rem;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
 
   @media screen and (min-width: 37em) {
     padding: 1.8rem;
@@ -139,7 +139,7 @@ td:not(:last-child) {
 .time__button {
   display: inline-block;
   padding: 0.4rem;
-  min-width: 2rem;
+  min-width: 1.8rem;
   border: none;
   background-color: var(--color-dark);
   color: var(--text-bright);
@@ -149,13 +149,14 @@ td:not(:last-child) {
     padding: 1rem;
   }
 }
+
 .time__button:hover {
   background-color: var(--hover-color);
 }
 
 .time__input {
   width: 100%;
-  min-width: 3rem;
+  min-width: 2.5rem;
   text-align: center;
 }
 
@@ -179,6 +180,7 @@ td:not(:last-child) {
     font-size: 1.8rem;
   }
 }
+
 .table__button:hover {
   background-color: var(--color-dark);
 }
