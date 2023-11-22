@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie rental login and register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1 class="heading__primary">Movie rental</h1>
+    </header>
+    <main>
+      <div class="forms">
+        <form class="form" action="../home/home.html">
+          <div>
+            <label class="form__label" for="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="email"
+              class="form__input"
+              autocomplete="username"
+              required
+              autofocus
+            />
+          </div>
+          <div>
+            <label class="form__label" for="current-password">Password</label>
+            <input
+              id="current-password"
+              type="password"
+              name="current-password"
+              placeholder="password"
+              autocomplete="current-password"
+              class="form__input"
+              required
+            />
+          </div>
+          <input type="submit" value="Sign in" class="form__submit" />
+        </form>
+        <form class="form" action="../home/home.html">
+          <div>
+            <label class="form__label" for="new-name">Name</label>
+            <input
+              id="new-name"
+              type="text"
+              name="new-name"
+              placeholder="name"
+              class="form__input"
+              required
+            />
+          </div>
+          <div>
+            <label class="form__label" for="new-surname">Surname</label>
+            <input
+              id="new-surname"
+              type="text"
+              name="new-surname"
+              placeholder="surname"
+              class="form__input"
+              required
+            />
+          </div>
+          <div>
+            <label class="form__label" for="new-email">Email</label>
+            <input
+              id="new-email"
+              type="email"
+              name="new-email"
+              placeholder="email"
+              class="form__input"
+              required
+            />
+          </div>
+          <div>
+            <label class="form__label" for="repeat-email">Email again</label>
+            <input
+              id="repeat-email"
+              type="email"
+              name="repeat-email"
+              placeholder="email"
+              class="form__input"
+              required
+            />
+          </div>
+          <div>
+            <label class="form__label" for="new-password">Password</label>
+            <input
+              id="new-password"
+              type="password"
+              name="new-password"
+              placeholder="password"
+              class="form__input"
+              required
+            />
+          </div>
+          <div>
+            <label class="form__label" for="repeat-password"
+              >Password again</label
+            >
+            <input
+              id="repeat-password"
+              type="password"
+              name="repeat-password"
+              placeholder="password"
+              class="form__input"
+              required
+            />
+          </div>
+          <input type="submit" value="Register" class="form__submit" />
+        </form>
+      </div>
+    </main>
+    <footer class="footer">
+      <p>Made by: Neringa Nedzinskiene</p>
+      <p>Copyright &copy; <span>2023</span></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <h1 class="heading__primary">Movie rental</h1>
+      <nav class="navigation-container">
+        <ul class="navigation__list">
+          <li class="navigation__item">
+            <a class="navigation__link" href="../home/home.html">Home</a>
+          </li>
+          <li class="navigation__item">
+            <a class="navigation__link" href="../yourMovies/yourMovies.html"
+              >Your movies</a
+            >
+          </li>
+          <li class="navigation__item">
+            <a class="navigation__link" href="./profile.html">Profile</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div>
+        <div class="profile__container">
+          <h2 class="heading__secondary">Profile</h2>
+          <div class="profile__card">
+            <img
+              src="../assets/icon-default-pofile.png"
+              alt="Default profile icon"
+              class="profile__img"
+            />
+            <div class="profile__details">
+              <p><strong>Name:</strong><span>John</span></p>
+              <p><strong>Surname:</strong><span>Newman</span></p>
+              <p><strong>Email:</strong><span>john.newman@gmail.com</span></p>
+            </div>
+            <button class="profile__button">Reset email</button>
+            <button class="profile__button profile__button--reset">
+              Reset password
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <p>Made by: Neringa Nedzinskiene</p>
+      <p>Copyright &copy; <span>2023</span></p>
+    </footer>
+  </body>
+</html>

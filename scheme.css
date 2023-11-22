@@ -1,0 +1,11 @@
+:root {
+  --color-dark: #363636;
+  --color-red: #c93333;
+  --text-bright: #ffffff;
+  --text-dark: #000000;
+  --background: #d9d9d9;
+  --font: "Inter", sans-serif;
+  --box-shadow: rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s;
+  --hover-color: #555;
+}
