@@ -136,7 +136,7 @@ body {
   cursor: pointer;
 }
 
-.profile__button--reset {
+.profile__button--right {
   @media screen and (min-width: 37em) {
     justify-self: start;
   }
