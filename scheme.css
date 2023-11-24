@@ -1,11 +1,16 @@
 :root {
-  --color-dark: #363636;
-  --color-red: #c93333;
-  --text-bright: #ffffff;
-  --text-dark: #000000;
-  --background: #d9d9d9;
-  --font: "Inter", sans-serif;
+  /* Colors */
+  --color-dark: rgb(54, 54, 54);
+  --color-red: rgb(200, 50, 50);
+  --color-white: rgb(255, 255, 255);
+  --color-black: rgb(0, 0, 0);
+  --color-grey: rgb(84, 84, 84);
   --box-shadow: rgba(0, 0, 0, 0.2);
+  --background: rgb(217, 217, 217);
+
+  /* Fonts */
+  --font: "Inter", sans-serif;
+
+  /* Transitions */
   --transition: all 0.3s;
-  --hover-color: #555;
 }

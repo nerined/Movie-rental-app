@@ -11,7 +11,7 @@ html {
 
 body {
   font-family: var(--font);
-  color: var(--text-dark);
+  color: var(--color-black);
   line-height: 1;
   font-weight: 400;
   background-color: var(--background);
@@ -21,7 +21,7 @@ body {
 }
 
 .heading__primary {
-  color: var(--text-bright);
+  color: var(--color-white);
   text-align: center;
   margin-top: 3rem;
   font-size: 4.2rem;
@@ -45,7 +45,7 @@ body {
   grid-template-columns: 1fr;
   padding: 4rem;
   border-radius: 3rem;
-  background-color: #fff;
+  background-color: var(--color-white);
   box-shadow: 0 2.4rem 4.8rem var(--box-shadow);
   gap: 2.4rem;
 
@@ -81,7 +81,7 @@ body {
 
 .form__submit {
   background-color: var(--color-dark);
-  color: var(--text-bright);
+  color: var(--color-white);
   width: 50%;
   border-radius: 3rem;
   border: none;
@@ -103,9 +103,9 @@ body {
 .footer {
   background-color: var(--color-dark);
   margin-top: auto;
-  color: var(--text-bright);
+  color: var(--color-white);
   font-size: 1.4rem;
   display: flex;
   justify-content: space-between;
-  padding: 5rem 2rem 2rem 2rem;
+  padding: 5rem 2rem 2rem;
 }
