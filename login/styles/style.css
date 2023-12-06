@@ -109,3 +109,11 @@ body {
   justify-content: space-between;
   padding: 5rem 2rem 2rem;
 }
+
+.form-field.error input {
+  border-color: var(--error-color);
+}
+
+.form-field small {
+  color: var(--error-color);
+}
