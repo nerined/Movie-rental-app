@@ -4,16 +4,19 @@ const emailSignInEl = document.querySelector("#email");
 const passwordSignInEl = document.querySelector("#current-password");
 const userNameEl = document.querySelector("#new-name");
 const userSurnameEl = document.querySelector("#new-surname");
-const emailSignupEl = document.querySelector("#new-email");
+const emailSignUpEl = document.querySelector("#new-email");
 const emailConfirmEl = document.querySelector("#repeat-email");
 const passwordSignUpEl = document.querySelector("#new-password");
 const passwordConfirmEl = document.querySelector("#repeat-password");
-const formField = document.querySelector(".form-field");
+
 const formSignUpEl = document.querySelector("#form-signup");
 const formSignInEl = document.querySelector("#form-signin");
 
+const buttonVisibility = document.querySelector(".form__button--visibility");
+// const buttonSignIn = document.querySelector(".form__button--signin");
+
 const isRequired = (value) => (value === "" ? false : true);
-const isBetween = (length, min, max) => length < min || length > max;
+const isBetween = (length, min) => length < min;
 
 const isEmailValid = (email) => {
   const regex =
@@ -23,13 +26,13 @@ const isEmailValid = (email) => {
 const isPasswordValid = (password) => {
   const regex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
-  return password.test(password);
+  return regex.test(password);
 };
 
 const showError = (input, message) => {
   const formField = input.parentElement;
 
-  formField.classList.remove("sucess");
+  formField.classList.remove("success");
   formField.classList.add("error");
 
   const error = formField.querySelector(".form-message");
@@ -39,8 +42,8 @@ const showError = (input, message) => {
 const showSucess = (input) => {
   const formField = input.parentElement;
 
+  formField.classList.add("success");
   formField.classList.remove("error");
-  formField.classList.add("sucess");
 
   const error = formField.querySelector(".form-message");
   error.textContent = "";
@@ -55,7 +58,7 @@ const validateName = function () {
 
   if (!isRequired(usernameValue)) {
     showError(userNameEl, "User name cannot be empty");
-  } else if (!isBetween(usernameValue.length, min)) {
+  } else if (isBetween(usernameValue.length, min)) {
     showError(userNameEl, `Name must be at least ${min} characters`);
   } else {
     showSucess(userNameEl);
@@ -73,7 +76,7 @@ const validateSurname = function () {
 
   if (!isRequired(surnameValue)) {
     showError(userSurnameEl, "Surname cannot be empty");
-  } else if (!isBetween(surnameValue.lenght, min)) {
+  } else if (isBetween(surnameValue.length, min)) {
     showError(userSurnameEl, `Surname must be at least ${min} characters`);
   } else {
     showSucess(userSurnameEl);
@@ -85,19 +88,19 @@ const validateSurname = function () {
 // Validate password field
 // Password should be 8 or more symbols long and cannot be empty
 // Password again should match the password field and cannot be empty
-const validatePassword = function () {
+const validatePassword = function (elem) {
   let valid = false;
-  const passwordValue = passwordSignUpEl.value.trim();
+  const passwordValue = elem.value.trim();
 
   if (!isRequired(passwordValue)) {
-    showError(passwordSignUpEl, "Password cannot be empty");
+    showError(elem, "Password cannot be empty");
   } else if (!isPasswordValid(passwordValue)) {
     showError(
-      passwordSignUpEl,
+      elem,
       `Password must has at least 8 characters that include at least 1 lowercase character, 1 uppercase characters, 1 number, and 1 special character in (!@#$%^&*)`
     );
   } else {
-    showSucess(passwordSignUp);
+    showSucess(elem);
     valid = true;
   }
   return valid;
@@ -123,16 +126,16 @@ const validateConfirmPassword = function () {
 // Validate email field
 // Email field should be in valid email format and cannot be empty
 // Email again should be the same as the Email field and cannot be empty
-const validateEmail = function () {
+const validateEmail = function (elem) {
   let valid = false;
-  const emailValue = emailSignupEl.value.trim();
+  const emailValue = elem.value.trim();
 
   if (!isRequired(emailValue)) {
-    showError(emailSignupEl, "Email cannot be empty");
+    showError(elem, "Email cannot be empty");
   } else if (!isEmailValid(emailValue)) {
-    showError(emailSignupEl, "Email is not valid");
+    showError(elem, "Email is not valid");
   } else {
-    showSucess(emailSignupEl);
+    showSucess(elem);
     valid = true;
   }
   return valid;
@@ -142,12 +145,12 @@ const validateEmail = function () {
 const validateConfirmEmail = function () {
   let valid = false;
   const emailConfirmValue = emailConfirmEl.value.trim();
-  const emailValue = emailSignupEl.value.trim();
+  const emailValue = emailSignUpEl.value.trim();
 
   if (!isRequired(emailConfirmValue)) {
     showError(emailConfirmEl, "Please enter password again");
-  } else if (password !== emailConfirmValue) {
-    showError(emailConfirmEl, "Confirm password does not match");
+  } else if (emailValue !== emailConfirmValue) {
+    showError(emailConfirmEl, "Confirm email does not match");
   } else {
     showSucess(emailConfirmEl);
     valid = true;
@@ -165,13 +168,13 @@ formSignUpEl.addEventListener("input", function (e) {
       validateSurname();
       break;
     case "new-email":
-      validateEmail();
+      validateEmail(emailSignUpEl);
       break;
     case "repeat-email":
       validateConfirmEmail();
       break;
     case "new-password":
-      validatePassword();
+      validatePassword(passwordSignUpEl);
       break;
     case "repeat-password":
       validateConfirmPassword();
@@ -180,9 +183,31 @@ formSignUpEl.addEventListener("input", function (e) {
       "This field does not require input";
   }
 });
+
+formSignInEl.addEventListener("input", function (e) {
+  switch (e.target.id) {
+    case "email":
+      validateEmail(emailSignInEl);
+      break;
+    case "current-password":
+      validatePassword(passwordSignInEl);
+      break;
+
+    default:
+      "This field does not require input";
+  }
+});
+
 formSignInEl.addEventListener("submit", function (e) {
-  // prevent form from submitting
   e.preventDefault();
+
+  const isEmailValid = validateEmail(emailSignInEl);
+  const isPasswordValid = validatePassword(passwordSignInEl);
+  const isFormValid = isEmailValid && isPasswordValid;
+
+  if (isFormValid) {
+    window.location.href = "../home/home.html";
+  }
 });
 
 formSignUpEl.addEventListener("submit", function (e) {
@@ -190,20 +215,27 @@ formSignUpEl.addEventListener("submit", function (e) {
 
   const isNameValid = validateName();
   const isSurnameValid = validateSurname();
-  const isEmailValid = validateEmail();
+  const isEmailValid = validateEmail(emailSignUpEl);
   const isConfirmEmailValid = validateConfirmEmail();
-  const isPasswordValid = validatePassword();
+  const isPasswordValid = validatePassword(passwordSignUpEl);
   const isConfirmPasswordValid = validateConfirmPassword();
 
   const isFormValid =
-    isNameValid() &&
-    isSurnameValid() &&
-    isEmailValid() &&
-    isConfirmEmailValid() &&
-    isPasswordValid() &&
-    isConfirmPasswordValid();
+    isNameValid &&
+    isSurnameValid &&
+    isEmailValid &&
+    isConfirmEmailValid &&
+    isPasswordValid &&
+    isConfirmPasswordValid;
 
   if (isFormValid) {
-    // redirect to home page
+    window.location.href = "../home/home.html";
+  }
+});
+
+buttonVisibility.addEventListener("click", function () {
+  if (formSignUpEl.style.display === "") {
+    formSignUpEl.style.display = "grid";
+    this.style.display = "none";
   }
 });

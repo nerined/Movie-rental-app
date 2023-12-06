@@ -79,7 +79,9 @@ body {
   box-shadow: 0 0 0 0.3rem var(--box-shadow);
 }
 
-.form__submit {
+.form__button--signin,
+.form__button--register,
+.form__button--visibility {
   background-color: var(--color-dark);
   color: var(--color-white);
   width: 50%;
@@ -96,10 +98,15 @@ body {
   }
 }
 
-.form__submit:hover {
+.form__button--signin:hover,
+.form__button--register:hover,
+.form__button--visibility:hover {
   background-color: var(--color-red);
 }
 
+.form__button--visibility {
+  margin: 0 auto;
+}
 .footer {
   background-color: var(--color-dark);
   margin-top: auto;
@@ -110,10 +117,16 @@ body {
   padding: 5rem 2rem 2rem;
 }
 
-.form-field.error input {
-  border-color: var(--error-color);
+.form_field.error input {
+  border: 1px solid var(--error-color);
 }
 
-.form-field small {
-  color: var(--error-color);
+.form_field.success input {
+  border: 1px solid var(--success-color);
 }
+
+#form-signup {
+  display: none;
+}
+
+/* Debounce functionality */

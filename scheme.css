@@ -8,6 +8,8 @@
   --box-shadow: rgba(0, 0, 0, 0.2);
   --background: rgb(217, 217, 217);
   --error-color: rgb(220, 56, 72);
+  --success-color: rgb(41, 168, 71);
+
   /* Fonts */
   --font: "Inter", sans-serif;
 

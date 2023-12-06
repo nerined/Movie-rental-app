@@ -20,7 +20,7 @@
     <main>
       <div class="forms">
         <form class="form" id="form-signin" action="../home/home.html">
-          <div>
+          <div class="form_field">
             <label class="form__label" for="email">Email</label>
             <input
               id="email"
@@ -34,7 +34,7 @@
             />
             <div class="form-message"></div>
           </div>
-          <div>
+          <div class="form_field">
             <label class="form__label" for="current-password">Password</label>
             <input
               id="current-password"
@@ -47,7 +47,7 @@
             />
             <div class="form-message"></div>
           </div>
-          <input type="submit" value="Sign in" class="form__submit" />
+          <input type="submit" value="Sign in" class="form__button--register" />
         </form>
         <form class="form" id="form-signup" action="../home/home.html">
           <div class="form_field">
@@ -58,7 +58,6 @@
               name="new-name"
               placeholder="name"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
@@ -70,7 +69,6 @@
               name="new-surname"
               placeholder="surname"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
@@ -82,7 +80,6 @@
               name="new-email"
               placeholder="email"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
@@ -94,7 +91,6 @@
               name="repeat-email"
               placeholder="email"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
@@ -106,7 +102,6 @@
               name="new-password"
               placeholder="password"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
@@ -120,12 +115,12 @@
               name="repeat-password"
               placeholder="password"
               class="form__input"
-              required
             />
             <div class="form-message"></div>
           </div>
-          <input type="submit" value="Register" class="form__submit" />
+          <input type="submit" value="Register" class="form__button--signin" />
         </form>
+        <button class="form__button--visibility">Register</button>
       </div>
     </main>
     <footer class="footer">
