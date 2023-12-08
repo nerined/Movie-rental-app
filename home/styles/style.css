@@ -158,6 +158,11 @@ td:not(:last-child) {
   background-color: var(--color-red);
 }
 
+.table__button[disabled] {
+  background-color: #cccccc;
+  color: #666666;
+}
+
 .footer {
   background-color: var(--color-dark);
   margin-top: auto;

@@ -135,6 +135,10 @@ td:not(:last-child) {
 .time__wrapper {
   display: flex;
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
 
 .time__button {
   display: inline-block;
