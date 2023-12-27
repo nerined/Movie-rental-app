@@ -1,4 +1,4 @@
-import { moviesList } from "../../data.js";
+const duration = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168];
 
 const tableBody = document.getElementsByTagName("tbody")[0];
 
@@ -41,6 +41,22 @@ function stepDown(id) {
   displayYourMovies();
 }
 
+function limitNumberWithinRange(num) {
+  const MIN = 12;
+  const MAX = 168;
+  const parsed = parseInt(num);
+  return Math.min(Math.max(parsed, MIN), MAX);
+}
+
+const showError = (input, message) => {
+  const formField = input.parentElement;
+
+  formField.classList.add("error");
+
+  const error = formField.querySelector(".form-message");
+  error.textContent = message;
+};
+
 function displayYourMovies() {
   const list = getMovieList();
 
@@ -49,29 +65,25 @@ function displayYourMovies() {
   if (list.length !== 0) {
     list.forEach((el, index) => {
       const row = `<tr class="table__row">
-  <td class="table__column--first">${el.title}</td>
+  <td class="table__column--first" title=${el.title}>${el.title}</td>
   <td>${el.genre}</td>
   <td>
     <div class="time__wrapper">
       <button class="time__button time__button--down" data-index=${index}>&lt;</button
       ><input
         type="number"
-        min="12"
-        max="168"
-        value=${12}
-        step="12"
         name="number"
         inputmode="numeric" 
         class="time__input"
         data-index=${index}
+        value="12"
       /><button class="time__button time__button--up" data-index=${index}>&gt;</button>
     </div>
+    <div>Please choose the correct value between 12-168 hours <div>
   </td>
   <td>${el.price}$</td>
   <td>
-    <button class="table__button" data-index=${index} data-id=${
-        el.imdbID
-      }>Remove</button>
+    <button class="table__button" data-index=${index} data-id=${el.imdbID}>Remove</button>
   </td>
 </tr>
 `;
@@ -83,46 +95,38 @@ function displayYourMovies() {
     button.addEventListener("click", function () {
       updateList(button.dataset.id);
 
-      // const objIndex = list.findIndex((obj) => {
-      //   return obj.imdbID === button.dataset.index;
-      // });
-
       list.splice(button.dataset.index, 1);
       localStorage.yourMovieList = JSON.stringify(list);
-      // moviesList[button.dataset.index].stock--;
+
       displayYourMovies();
     });
   });
 
   document.querySelectorAll(".time__input").forEach(function (input) {
-    input.addEventListener("change", function () {
-      // const message = document.querySelector('#message');
-      // const result = document.querySelector('#result');
-      // message.addEventListener('input', function () {
-      //     result.textContent = this.value;
-      // });
+    input.addEventListener("change", function (e) {
+      const inputValue = Number(e.target.value.trim());
+      if (inputValue % 12 === 0 && inputValue >= 12 && inputValue <= 168) {
+        input.value = e.target.value;
+      } else {
+        showError();
+      }
     });
   });
 
+  // event.target.value
   document.querySelectorAll(".time__button").forEach(function (button) {
     button.addEventListener("click", function () {
-      button.classList.forEach((el) => {
-        if (el === "time__button--up") {
-          let input =
-            document.querySelectorAll(".time__input")[button.dataset.index];
-
-          input.setAttribute("value", Number(input.value) + 12);
-          // list[button.dataset.index].stock--;
-          // stepUp(button.dataset.index);
-        } else {
-          let input =
-            document.querySelectorAll(".time__input")[button.dataset.index];
-
-          input.setAttribute("value", Number(input.value) - 12);
-
-          // stepDown(button.dataset.index);
-        }
-      });
+      if (button.classList[1] === "time__button--up") {
+        let input =
+          document.querySelectorAll(".time__input")[button.dataset.index];
+        const updatedValue = Number(input.value) + 12;
+        input.value = limitNumberWithinRange(updatedValue);
+      } else {
+        let input =
+          document.querySelectorAll(".time__input")[button.dataset.index];
+        const updatedValue = Number(input.value) - 12;
+        input.value = limitNumberWithinRange(updatedValue);
+      }
     });
   });
 }

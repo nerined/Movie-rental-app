@@ -168,6 +168,10 @@ input::-webkit-inner-spin-button {
   outline: none;
 }
 
+.form_field.error input {
+  border: 1px solid var(--error-color);
+}
+
 .table__button {
   width: 100%;
   padding: 1.6rem;
