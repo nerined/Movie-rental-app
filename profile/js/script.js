@@ -56,17 +56,3 @@ function displayProfile(email = "john.newman@gmail.com") {
 }
 
 displayProfile();
-
-// function resetEmail() {
-//   resetEmailBtn.addEventListener("click", function () {
-//     const email = prompt("Please input a new value for email");
-
-//     if (validateEmail(email)) {
-//       displayProfile(email);
-//     } else {
-//       return;
-//     }
-//   });
-// }
-
-// resetEmail();

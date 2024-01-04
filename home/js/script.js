@@ -1,3 +1,4 @@
+"use strict";
 // const moviesList = [
 //   {
 //     imdbID: "tt1375666",
