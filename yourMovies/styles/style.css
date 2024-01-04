@@ -168,8 +168,14 @@ input::-webkit-inner-spin-button {
   outline: none;
 }
 
-.form_field.error input {
+/* .form_field.error input {
   border: 1px solid var(--error-color);
+} */
+.time__input.error {
+  border: 1px solid var(--error-color);
+}
+.time__input.success {
+  border: 1px solid var(--success-color);
 }
 
 .table__button {
@@ -201,4 +207,9 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: space-between;
   padding: 5rem 2rem 2rem;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: var(--error-color);
 }

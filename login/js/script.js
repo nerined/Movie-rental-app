@@ -1,5 +1,8 @@
 "use strict";
 
+/* Debounce functionality */
+/* Invisible password */
+
 const emailSignInEl = document.querySelector("#email");
 const passwordSignInEl = document.querySelector("#current-password");
 const userNameEl = document.querySelector("#new-name");

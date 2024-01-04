@@ -1,4 +1,4 @@
-const duration = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168];
+// const duration = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168];
 
 const tableBody = document.getElementsByTagName("tbody")[0];
 
@@ -24,7 +24,6 @@ function getList() {
 
 function updateList(id) {
   const arr = getList();
-
   const objIndex = arr.findIndex((obj) => {
     return obj.imdbID === id;
   });
@@ -44,17 +43,25 @@ function stepDown(id) {
 function limitNumberWithinRange(num) {
   const MIN = 12;
   const MAX = 168;
-  const parsed = parseInt(num);
-  return Math.min(Math.max(parsed, MIN), MAX);
+  // const parsed = parseInt(num);
+  return Math.min(Math.max(num, MIN), MAX);
 }
 
 const showError = (input, message) => {
-  const formField = input.parentElement;
+  input.classList.remove("success");
+  input.classList.add("error");
 
-  formField.classList.add("error");
-
-  const error = formField.querySelector(".form-message");
+  const formField = input.parentElement.parentElement;
+  const error = formField.querySelector(".error-message");
   error.textContent = message;
+};
+const showSucess = (input) => {
+  input.classList.remove("error");
+  input.classList.add("success");
+
+  const formField = input.parentElement.parentElement;
+  const error = formField.querySelector(".error-message");
+  error.textContent = "";
 };
 
 function displayYourMovies() {
@@ -79,7 +86,7 @@ function displayYourMovies() {
         value="12"
       /><button class="time__button time__button--up" data-index=${index}>&gt;</button>
     </div>
-    <div>Please choose the correct value between 12-168 hours <div>
+    <div class="error-message"> <div>
   </td>
   <td>${el.price}$</td>
   <td>
@@ -104,16 +111,17 @@ function displayYourMovies() {
 
   document.querySelectorAll(".time__input").forEach(function (input) {
     input.addEventListener("change", function (e) {
-      const inputValue = Number(e.target.value.trim());
+      let inputValue = Number(e.target.value.trim());
+
       if (inputValue % 12 === 0 && inputValue >= 12 && inputValue <= 168) {
         input.value = e.target.value;
+        showSucess(input);
       } else {
-        showError();
+        showError(input, "Please choose value between 12-168h");
       }
     });
   });
 
-  // event.target.value
   document.querySelectorAll(".time__button").forEach(function (button) {
     button.addEventListener("click", function () {
       if (button.classList[1] === "time__button--up") {

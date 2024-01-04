@@ -83,8 +83,6 @@
 
 import { moviesList } from "../../data.js";
 
-// const yourMovies = [];
-
 const tableBody = document.getElementsByTagName("tbody")[0];
 
 function getList() {
