@@ -34,13 +34,13 @@ function updateList(id) {
   localStorage.movies = JSON.stringify(arr);
 }
 
-function stepUp(id) {
-  displayYourMovies();
-}
+// function stepUp(id) {
+//   displayYourMovies();
+// }
 
-function stepDown(id) {
-  displayYourMovies();
-}
+// function stepDown(id) {
+//   displayYourMovies();
+// }
 
 function limitNumberWithinRange(num) {
   const MIN = 12;
@@ -49,22 +49,23 @@ function limitNumberWithinRange(num) {
   return Math.min(Math.max(num, MIN), MAX);
 }
 
-const showError = (input, message) => {
+function showError(input, message) {
   input.classList.remove("success");
   input.classList.add("error");
 
   const formField = input.parentElement.parentElement;
   const error = formField.querySelector(".error-message");
   error.textContent = message;
-};
-const showSucess = (input) => {
+}
+
+function showSucess(input) {
   input.classList.remove("error");
   input.classList.add("success");
 
   const formField = input.parentElement.parentElement;
   const error = formField.querySelector(".error-message");
   error.textContent = "";
-};
+}
 
 function displayYourMovies() {
   const list = getMovieList();
@@ -72,8 +73,9 @@ function displayYourMovies() {
   tableBody.innerHTML = "";
 
   if (list.length !== 0) {
+    let row = "";
     list.forEach((el, index) => {
-      const row = `<tr class="table__row">
+      row += `<tr class="table__row">
   <td class="table__column--first" title=${el.title}>${el.title}</td>
   <td>${el.genre}</td>
   <td>
@@ -96,17 +98,16 @@ function displayYourMovies() {
   </td>
 </tr>
 `;
-      tableBody.insertAdjacentHTML("beforeend", row);
     });
+    tableBody.innerHTML = row;
+    // tableBody.insertAdjacentHTML("beforeend", row);
   }
 
   document.querySelectorAll(".table__button").forEach(function (button) {
     button.addEventListener("click", function () {
       updateList(button.dataset.id);
-
       list.splice(button.dataset.index, 1);
       localStorage.yourMovieList = JSON.stringify(list);
-
       displayYourMovies();
     });
   });
@@ -126,17 +127,16 @@ function displayYourMovies() {
 
   document.querySelectorAll(".time__button").forEach(function (button) {
     button.addEventListener("click", function () {
+      let updatedValue;
+      let input =
+        document.querySelectorAll(".time__input")[button.dataset.index];
+
       if (button.classList[1] === "time__button--up") {
-        let input =
-          document.querySelectorAll(".time__input")[button.dataset.index];
-        const updatedValue = Number(input.value) + 12;
-        input.value = limitNumberWithinRange(updatedValue);
+        updatedValue = Number(input.value) + 12;
       } else {
-        let input =
-          document.querySelectorAll(".time__input")[button.dataset.index];
-        const updatedValue = Number(input.value) - 12;
-        input.value = limitNumberWithinRange(updatedValue);
+        updatedValue = Number(input.value) - 12;
       }
+      input.value = limitNumberWithinRange(updatedValue);
     });
   });
 }

@@ -1,6 +1,15 @@
 const profileDetails = document.querySelector(".profile__details");
 const resetEmailBtn = document.querySelector(".profile__button--left");
 
+// take user details from session storage
+const users = [
+  {
+    name: "John",
+    surname: "Newman",
+    email: "john.newman@gmail.com",
+  },
+];
+
 const isEmailValid = (email) => {
   const regex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -34,12 +43,12 @@ const validateEmail = function (elem) {
   return valid;
 };
 
-function displayProfile(email = "john.newman@gmail.com") {
+function displayProfile(email = users[0].email) {
   profileDetails.innerHTML = "";
 
   const accountDetail = `
-  <p><strong>Name: </strong>John</p>
-  <p><strong>Surname: </strong>Newman</p>
+  <p><strong>Name: </strong>${users[0].name}</p>
+  <p><strong>Surname: </strong>${users[0].surname}</p>
   <p><strong>Email: </strong>${email}</p>
   `;
   profileDetails.insertAdjacentHTML("beforeend", accountDetail);

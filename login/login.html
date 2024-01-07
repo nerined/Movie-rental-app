@@ -47,7 +47,7 @@
             />
             <div class="form-message"></div>
           </div>
-          <input type="submit" value="Sign in" class="form__button--register" />
+          <input type="submit" value="Sign in" class="form__button--signin" />
         </form>
         <form class="form" id="form-signup" action="../home/home.html">
           <div class="form_field">
@@ -118,9 +118,28 @@
             />
             <div class="form-message"></div>
           </div>
-          <input type="submit" value="Register" class="form__button--signin" />
+          <input
+            type="submit"
+            value="Register"
+            class="form__button--register"
+          />
         </form>
         <button class="form__button--visibility">Register</button>
+      </div>
+      <!-- <div class="info__message--register"> -->
+      <div class="info__message--success">
+        <h3>
+          Congratulations, your account has been successfully created! Please
+          sign in.
+        </h3>
+      </div>
+      <div class="info__message--warning">
+        <h3>This email address already exists. Please choose a new one!</h3>
+      </div>
+      <div class="info__message--error">
+        <h3>
+          Either email address or password are not matching. Please try again!
+        </h3>
       </div>
     </main>
     <footer class="footer">

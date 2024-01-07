@@ -1,5 +1,7 @@
 @import "/scheme.css";
 
+@import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap");
+
 * {
   padding: 0;
   margin: 0;
@@ -106,6 +108,7 @@ body {
 
 .form__button--visibility {
   margin: 0 auto;
+  width: 22.8rem;
 }
 .footer {
   background-color: var(--color-dark);
@@ -127,4 +130,34 @@ body {
 
 #form-signup {
   display: none;
+}
+
+.info__message--success,
+.info__message--warning,
+.info__message--error {
+  font-size: 1.2rem;
+  width: 50%;
+  margin: 2rem auto;
+  padding: 3rem;
+  position: relative;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1.5rem 0.5rem #ccc;
+}
+
+.info__message--success {
+  display: none;
+  color: #270;
+  background-color: #dff2bf;
+}
+
+.info__message--warning {
+  display: none;
+  color: #9f6000;
+  background-color: #feefb3;
+}
+
+.info__message--error {
+  display: none;
+  color: red;
+  background-color: #f7a7a3;
 }

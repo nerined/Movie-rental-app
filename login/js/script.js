@@ -2,7 +2,7 @@
 
 /* Debounce functionality */
 /* Invisible password */
-
+let registeredUsers = [];
 const emailSignInEl = document.querySelector("#email");
 const passwordSignInEl = document.querySelector("#current-password");
 const userNameEl = document.querySelector("#new-name");
@@ -11,12 +11,20 @@ const emailSignUpEl = document.querySelector("#new-email");
 const emailConfirmEl = document.querySelector("#repeat-email");
 const passwordSignUpEl = document.querySelector("#new-password");
 const passwordConfirmEl = document.querySelector("#repeat-password");
-
 const formSignUpEl = document.querySelector("#form-signup");
 const formSignInEl = document.querySelector("#form-signin");
+const visibleBtn = document.querySelector(".form__button--visibility");
+const messageSuccessEl = document.querySelector(".info__message--success");
+const messageWarningEl = document.querySelector(".info__message--warning");
+const messageErrorEl = document.querySelector(".info__message--error");
 
-const buttonVisibility = document.querySelector(".form__button--visibility");
-// const buttonSignIn = document.querySelector(".form__button--signin");
+const usersFromlocalStorage = JSON.parse(
+  localStorage.getItem("registeredUsers")
+);
+
+if (usersFromlocalStorage) {
+  registeredUsers = usersFromlocalStorage;
+}
 
 const isRequired = (value) => (value === "" ? false : true);
 const isBetween = (length, min) => length < min;
@@ -56,12 +64,12 @@ const showSucess = (input) => {
 // Name field should contain two or more letters and cannot be empty
 const validateName = function () {
   let valid = false;
-  const usernameValue = userNameEl.value.trim();
+  const nameValue = userNameEl.value.trim();
   const min = 2;
 
-  if (!isRequired(usernameValue)) {
+  if (!isRequired(nameValue)) {
     showError(userNameEl, "User name cannot be empty");
-  } else if (isBetween(usernameValue.length, min)) {
+  } else if (isBetween(nameValue.length, min)) {
     showError(userNameEl, `Name must be at least ${min} characters`);
   } else {
     showSucess(userNameEl);
@@ -207,9 +215,16 @@ formSignInEl.addEventListener("submit", function (e) {
   const isEmailValid = validateEmail(emailSignInEl);
   const isPasswordValid = validatePassword(passwordSignInEl);
   const isFormValid = isEmailValid && isPasswordValid;
+  // const isEmailAndPasswordCorrect=
+  // canLogin();
+  const isSuccessful = canLogin();
 
-  if (isFormValid) {
+  if (isFormValid && isSuccessful) {
+    messageWarningEl.style.display = "";
+    addToSessionStorage();
     window.location.href = "../home/home.html";
+  } else if (isFormValid && !isSuccessful) {
+    messageErrorEl.style.display = "block";
   }
 });
 
@@ -231,14 +246,87 @@ formSignUpEl.addEventListener("submit", function (e) {
     isPasswordValid &&
     isConfirmPasswordValid;
 
-  if (isFormValid) {
-    window.location.href = "../home/home.html";
+  const isEmailUnique = validateUnique();
+
+  if (isFormValid && isEmailUnique) {
+    addNewUser();
+    messageWarningEl.style.display = "";
+    messageSuccessEl.style.display = "block";
+    // formSignUpEl.style.display === "";
+    setTimeout(function () {
+      window.location.href = "../home/home.html";
+    }, 1000);
+  } else if (isFormValid && !isEmailUnique) {
+    messageWarningEl.style.display = "block";
   }
 });
 
-buttonVisibility.addEventListener("click", function () {
+function validateUnique() {
+  let isUnique = true;
+  const emailInput = emailSignUpEl.value.trim().toLowerCase();
+
+  for (let i = 0; i < registeredUsers.length; i++) {
+    if (registeredUsers[i].email === emailInput) {
+      isUnique = false;
+      break;
+    }
+  }
+  return isUnique;
+}
+
+// // Registering and Login
+// You should create in local storage an array containing registered users.
+// After successful registration the user should be added to the registered user array. (In this task for storing passwords, you can store it as plain text)
+function addNewUser() {
+  const name = userNameEl.value.trim();
+  const surname = userSurnameEl.value.trim();
+  const password = passwordSignUpEl.value.trim();
+  const email = emailSignUpEl.value.trim().toLowerCase();
+
+  const user = { name, surname, password, email };
+  registeredUsers.push(user);
+  localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+
+  // const passwordConfirmValue = passwordConfirmEl.value.trim();
+  // const emailConfirmEl = emailConfirmEl.value.trim();
+}
+
+function canLogin() {
+  const emailInput = emailSignInEl.value.trim().toLowerCase();
+  const passwordInput = passwordSignInEl.value.trim();
+  let isMatching = false;
+
+  for (let i = 0; i < registeredUsers.length; i++) {
+    if (
+      registeredUsers[i].email === emailInput &&
+      registeredUsers[i].password === passwordInput
+    ) {
+      isMatching = true;
+      break;
+    }
+  }
+  return isMatching;
+}
+
+function addToSessionStorage() {
+  const emailInput = emailSignInEl.value.trim().toLowerCase();
+
+  const currentUser = registeredUsers.filter((obj) => {
+    return obj.email === emailInput;
+  });
+  sessionStorage.setItem("currentLoggedIn", JSON.stringify(currentUser[0]));
+}
+
+// If user try to login, then with the login info you should compare if we have such user in the registered user array. If we have the user with the right email and password, then you redirect user to the home.html
+// As well you should have in local storage an user object containing information about current user.
+// If in local storage current user object is empty, then don't allow user to go to home.html, yourMovies.html and profile.html. But otherwise if in local storage current user object is not empty then you should allow user going to the home.html, yourMovies.html and profile.html (If already registered user tries to access login, then you should redirect him to home.html)
+// Add in the home.html navigation bar a logout button.
+// To the logout button add such a functionality, so that it deletes in the local storage the current user object. After deleting the object redirect user to login.html
+
+visibleBtn.addEventListener("click", function () {
   if (formSignUpEl.style.display === "") {
     formSignUpEl.style.display = "grid";
     this.style.display = "none";
+    // messageErrorEl.style.display = "";
   }
 });
