@@ -10,6 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Open+Sans&display=swap"
       rel="stylesheet"
     />
+    <!-- <script
+      src="https://kit.fontawesome.com/3a66b8dd24.js"
+      crossorigin="anonymous"
+    ></script> -->
 
     <link rel="stylesheet" href="styles/style.css" />
   </head>
@@ -18,24 +22,29 @@
       <h1 class="heading__primary">Movie rental</h1>
       <nav class="navigation-container">
         <ul class="navigation__list">
-          <li class="navigation__item">
-            <a class="navigation__link" href="./home.html">Home</a>
-          </li>
-          <li class="navigation__item">
-            <a class="navigation__link" href="../yourMovies/yourMovies.html"
-              >Your movies</a
-            >
-          </li>
-          <li class="navigation__item">
-            <a class="navigation__link" href="../profile/profile.html"
-              >Profile</a
-            >
-          </li>
-
-          <li class="navigation__item">
-            <button id="logOutBtn">logOutBtn</button>
-            <!-- <a class="navigation__link" href="#" id="logOutBtn">Log out</a> -->
-          </li>
+          <div class="navigation__list__container">
+            <li class="navigation__item">
+              <a class="navigation__link" href="./home.html">Home</a>
+            </li>
+            <li class="navigation__item">
+              <a class="navigation__link" href="../yourMovies/yourMovies.html"
+                >Your movies</a
+              >
+            </li>
+            <li class="navigation__item">
+              <a class="navigation__link" href="../profile/profile.html"
+                >Profile</a
+              >
+            </li>
+          </div>
+          <div class="navigation__list__container">
+            <li class="navigation__item logout">
+              <!-- <button class="navigation__link" id="logOutBtn">logOutBtn</button> -->
+              <a class="navigation__link logout" href="#" id="logOutBtn"
+                >Log out <i class="fa-solid fa-right-from-bracket"></i
+              ></a>
+            </li>
+          </div>
         </ul>
       </nav>
     </header>
@@ -116,5 +125,9 @@
       <p>Copyright &copy; <span>2023</span></p>
     </footer>
     <script type="module" src="./js/script.js"></script>
+    <script
+      src="https://kit.fontawesome.com/3a66b8dd24.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

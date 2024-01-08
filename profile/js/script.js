@@ -1,14 +1,24 @@
+// CHECK IF CURRENT USER IS PRESENT
+
 const profileDetails = document.querySelector(".profile__details");
 const resetEmailBtn = document.querySelector(".profile__button--left");
+const profileContainer = document.querySelector(".profile__container");
+let userDetails = {};
 
-// take user details from session storage
-const users = [
-  {
-    name: "John",
-    surname: "Newman",
-    email: "john.newman@gmail.com",
-  },
-];
+const currentlyLoggedinUser = JSON.parse(
+  sessionStorage.getItem("currentLoggedIn")
+);
+
+if (currentlyLoggedinUser) {
+  userDetails = currentlyLoggedinUser;
+  renderProfile();
+} else {
+  profileContainer.innerHTML =
+    "<p>You are not allowed to view these details. Please login first</p>";
+  setTimeout(function () {
+    window.location.href = "../login/login.html";
+  }, 2000);
+}
 
 const isEmailValid = (email) => {
   const regex =
@@ -43,25 +53,39 @@ const validateEmail = function (elem) {
   return valid;
 };
 
-function displayProfile(email = users[0].email) {
-  profileDetails.innerHTML = "";
+function updateEmail(changedEmail) {
+  const usersFromlocalStorage = JSON.parse(
+    localStorage.getItem("registeredUsers")
+  );
+  const registeredUsers = usersFromlocalStorage;
 
-  const accountDetail = `
-  <p><strong>Name: </strong>${users[0].name}</p>
-  <p><strong>Surname: </strong>${users[0].surname}</p>
-  <p><strong>Email: </strong>${email}</p>
-  `;
-  profileDetails.insertAdjacentHTML("beforeend", accountDetail);
-
-  resetEmailBtn.addEventListener("click", function () {
-    const email = prompt("Please input a new value for email");
-
-    if (validateEmail(email)) {
-      displayProfile(email);
-    } else {
-      return;
+  for (let i = 0; i < registeredUsers.length; i++) {
+    if (registeredUsers[i].email === userDetails.email) {
+      registeredUsers[i].email = changedEmail;
+      localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+      break;
     }
-  });
+  }
+
+  userDetails.email = changedEmail;
+  sessionStorage.setItem("currentLoggedIn", JSON.stringify(userDetails));
 }
 
-displayProfile();
+function renderProfile() {
+  profileDetails.innerHTML = "";
+  const accountDetail = `
+  <p><strong>Name: </strong>${userDetails.name}</p>
+  <p><strong>Surname: </strong>${userDetails.surname}</p>
+  <p><strong>Email: </strong>${userDetails.email}</p>
+  `;
+  profileDetails.insertAdjacentHTML("beforeend", accountDetail);
+}
+
+resetEmailBtn.addEventListener("click", function () {
+  const email = prompt("Please input a new value for email");
+  const isEmailValid = validateEmail(email);
+  if (isEmailValid) {
+    updateEmail(email);
+    renderProfile();
+  }
+});

@@ -1,19 +1,48 @@
 "use strict";
 
-// const duration = [12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 168];
-
 const tableBody = document.getElementsByTagName("tbody")[0];
+const tableContainer = document.querySelector(".table__container");
 
-function getMovieList() {
-  let yourMovieList = [];
-  try {
-    yourMovieList = JSON.parse(localStorage.yourMovieList);
-  } catch {
-    yourMovieList = [];
-  }
-  return yourMovieList;
+const currentlyLoggedinUser = JSON.parse(
+  sessionStorage.getItem("currentLoggedIn")
+);
+
+if (!currentlyLoggedinUser) {
+  tableContainer.innerHTML =
+    "<p>You are not allowed to view these details. Please login first</p>";
+  setTimeout(function () {
+    window.location.href = "../login/login.html";
+  }, 2000);
+} else {
+  displayYourMovies();
 }
 
+function getMovieList() {
+  let yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
+
+  try {
+    let isPresentInArr = true;
+    const arrFromLocalStorage = JSON.parse(localStorage.yourMovieList);
+
+    for (let i = 0; i < arrFromLocalStorage.length; i++) {
+      isPresentInArr =
+        arrFromLocalStorage[i].userEmail === currentlyLoggedinUser.email;
+    }
+
+    if (!isPresentInArr) {
+      arrFromLocalStorage.push({
+        userEmail: currentlyLoggedinUser.email,
+        movies: [],
+      });
+    }
+
+    yourMovieList = arrFromLocalStorage;
+  } catch {
+    yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
+  }
+
+  return yourMovieList;
+}
 function getList() {
   let movieList = [];
   try {
@@ -45,7 +74,6 @@ function updateList(id) {
 function limitNumberWithinRange(num) {
   const MIN = 12;
   const MAX = 168;
-  // const parsed = parseInt(num);
   return Math.min(Math.max(num, MIN), MAX);
 }
 
@@ -71,51 +99,62 @@ function displayYourMovies() {
   const list = getMovieList();
 
   tableBody.innerHTML = "";
+  for (let i = 0; i < list.length; i++) {
+    if (
+      list[i].userEmail === currentlyLoggedinUser.email &&
+      list[i].movies.length !== 0
+    ) {
+      let row = "";
 
-  if (list.length !== 0) {
-    let row = "";
-    list.forEach((el, index) => {
-      row += `<tr class="table__row">
-  <td class="table__column--first" title=${el.title}>${el.title}</td>
-  <td>${el.genre}</td>
-  <td>
-    <div class="time__wrapper">
-      <button class="time__button time__button--down" data-index=${index}>&lt;</button
-      ><input
-        type="number"
-        name="number"
-        inputmode="numeric" 
-        class="time__input"
-        data-index=${index}
-        value="12"
-      /><button class="time__button time__button--up" data-index=${index}>&gt;</button>
-    </div>
-    <div class="error-message"> <div>
-  </td>
-  <td>${el.price}$</td>
-  <td>
-    <button class="table__button" data-index=${index} data-id=${el.imdbID}>Remove</button>
-  </td>
-</tr>
-`;
-    });
-    tableBody.innerHTML = row;
-    // tableBody.insertAdjacentHTML("beforeend", row);
+      list[0].movies.forEach((el, index) => {
+        row += `<tr class="table__row">
+    <td class="table__column--first" title=${el.title}>${el.title}</td>
+    <td>${el.genre}</td>
+    <td>
+      <div class="time__wrapper">
+        <button class="time__button time__button--down" data-index=${index}>&lt;</button
+        ><input
+          type="number"
+          name="number"
+          inputmode="numeric" 
+          class="time__input"
+          data-index=${index}
+          value="12"
+        /><button class="time__button time__button--up" data-index=${index}>&gt;</button>
+      </div>
+      <div class="error-message"> <div>
+    </td>
+    <td>${el.price}$</td>
+    <td>
+      <button class="table__button" data-index=${index} data-id=${el.imdbID}>Remove</button>
+    </td>
+  </tr>
+  `;
+      });
+      tableBody.innerHTML = row;
+    }
   }
 
   document.querySelectorAll(".table__button").forEach(function (button) {
     button.addEventListener("click", function () {
       updateList(button.dataset.id);
-      list.splice(button.dataset.index, 1);
-      localStorage.yourMovieList = JSON.stringify(list);
-      displayYourMovies();
+
+      for (let i = 0; i < list.length; i++) {
+        if (
+          list[i].userEmail === currentlyLoggedinUser.email &&
+          list[i].movies.length !== 0
+        ) {
+          list[i].movies.splice(button.dataset.index, 1);
+          localStorage.yourMovieList = JSON.stringify(list);
+          displayYourMovies();
+        }
+      }
     });
   });
 
   document.querySelectorAll(".time__input").forEach(function (input) {
     input.addEventListener("change", function (e) {
       let inputValue = Number(e.target.value.trim());
-
       if (inputValue % 12 === 0 && inputValue >= 12 && inputValue <= 168) {
         input.value = e.target.value;
         showSucess(input);
@@ -140,5 +179,3 @@ function displayYourMovies() {
     });
   });
 }
-
-displayYourMovies();

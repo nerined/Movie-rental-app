@@ -47,6 +47,7 @@ body {
 .navigation__list {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   list-style-type: none;
   background-color: var(--color-dark);
   border-radius: 3rem;
@@ -57,9 +58,18 @@ body {
   }
 }
 
+.navigation__list__container {
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: 37em) {
+    flex-direction: row;
+  }
+}
+
 .navigation__item {
   display: flex;
-  justify-content: center;
+  align-items: space-between;
   align-items: center;
 }
 
@@ -82,6 +92,8 @@ body {
 .navigation__link:active {
   background-color: var(--color-red);
 }
+/* .navigation__item.logout {
+} */
 
 /* Table styles*/
 .table-container {

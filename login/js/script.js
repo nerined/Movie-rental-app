@@ -26,6 +26,7 @@ if (usersFromlocalStorage) {
   registeredUsers = usersFromlocalStorage;
 }
 
+// VALIDATION
 const isRequired = (value) => (value === "" ? false : true);
 const isBetween = (length, min) => length < min;
 
@@ -209,19 +210,79 @@ formSignInEl.addEventListener("input", function (e) {
   }
 });
 
+// LOGGING AND SIGNING IN
+
+function canLogin() {
+  const emailInput = emailSignInEl.value.trim().toLowerCase();
+  const passwordInput = passwordSignInEl.value.trim();
+  let areCredentialsCorrect = false;
+
+  if (registeredUsers.length > 0) {
+    for (let i = 0; i < registeredUsers.length; i++) {
+      if (
+        registeredUsers[i].email === emailInput &&
+        registeredUsers[i].password === passwordInput
+      ) {
+        areCredentialsCorrect = true;
+        break;
+      }
+    }
+  }
+
+  return areCredentialsCorrect;
+}
+
+function addLoggedinUser(emailInput) {
+  let currentUser, updatedObj;
+  // const emailInput = emailSignInEl.value.trim().toLowerCase();
+
+  currentUser = registeredUsers.filter((obj) => {
+    return obj.email === emailInput;
+  });
+
+  const unwrapObj = function ({ name, surname, email }) {
+    return { name, surname, email };
+  };
+  updatedObj = unwrapObj(currentUser[0]);
+  sessionStorage.setItem("currentLoggedIn", JSON.stringify(updatedObj));
+}
+
+function findDuplicateEmail() {
+  let isUnique = true;
+  const emailInput = emailSignUpEl.value.trim().toLowerCase();
+
+  for (let i = 0; i < registeredUsers.length; i++) {
+    if (registeredUsers[i].email === emailInput) {
+      isUnique = false;
+      break;
+    }
+  }
+  return isUnique;
+}
+
+function addNewUser() {
+  const name = userNameEl.value.trim();
+  const surname = userSurnameEl.value.trim();
+  const password = passwordSignUpEl.value.trim();
+  const email = emailSignUpEl.value.trim().toLowerCase();
+  const user = { name, surname, password, email };
+
+  registeredUsers.push(user);
+  localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+  addLoggedinUser(email);
+}
+
 formSignInEl.addEventListener("submit", function (e) {
   e.preventDefault();
-
   const isEmailValid = validateEmail(emailSignInEl);
   const isPasswordValid = validatePassword(passwordSignInEl);
   const isFormValid = isEmailValid && isPasswordValid;
-  // const isEmailAndPasswordCorrect=
-  // canLogin();
   const isSuccessful = canLogin();
 
   if (isFormValid && isSuccessful) {
-    messageWarningEl.style.display = "";
-    addToSessionStorage();
+    const email = emailSignInEl.value.trim().toLowerCase();
+    // messageWarningEl.style.display = "";
+    addLoggedinUser(email);
     window.location.href = "../home/home.html";
   } else if (isFormValid && !isSuccessful) {
     messageErrorEl.style.display = "block";
@@ -230,7 +291,6 @@ formSignInEl.addEventListener("submit", function (e) {
 
 formSignUpEl.addEventListener("submit", function (e) {
   e.preventDefault();
-
   const isNameValid = validateName();
   const isSurnameValid = validateSurname();
   const isEmailValid = validateEmail(emailSignUpEl);
@@ -246,13 +306,13 @@ formSignUpEl.addEventListener("submit", function (e) {
     isPasswordValid &&
     isConfirmPasswordValid;
 
-  const isEmailUnique = validateUnique();
+  const isEmailUnique = findDuplicateEmail();
 
   if (isFormValid && isEmailUnique) {
     addNewUser();
+
     messageWarningEl.style.display = "";
     messageSuccessEl.style.display = "block";
-    // formSignUpEl.style.display === "";
     setTimeout(function () {
       window.location.href = "../home/home.html";
     }, 1000);
@@ -260,68 +320,6 @@ formSignUpEl.addEventListener("submit", function (e) {
     messageWarningEl.style.display = "block";
   }
 });
-
-function validateUnique() {
-  let isUnique = true;
-  const emailInput = emailSignUpEl.value.trim().toLowerCase();
-
-  for (let i = 0; i < registeredUsers.length; i++) {
-    if (registeredUsers[i].email === emailInput) {
-      isUnique = false;
-      break;
-    }
-  }
-  return isUnique;
-}
-
-// // Registering and Login
-// You should create in local storage an array containing registered users.
-// After successful registration the user should be added to the registered user array. (In this task for storing passwords, you can store it as plain text)
-function addNewUser() {
-  const name = userNameEl.value.trim();
-  const surname = userSurnameEl.value.trim();
-  const password = passwordSignUpEl.value.trim();
-  const email = emailSignUpEl.value.trim().toLowerCase();
-
-  const user = { name, surname, password, email };
-  registeredUsers.push(user);
-  localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
-
-  // const passwordConfirmValue = passwordConfirmEl.value.trim();
-  // const emailConfirmEl = emailConfirmEl.value.trim();
-}
-
-function canLogin() {
-  const emailInput = emailSignInEl.value.trim().toLowerCase();
-  const passwordInput = passwordSignInEl.value.trim();
-  let isMatching = false;
-
-  for (let i = 0; i < registeredUsers.length; i++) {
-    if (
-      registeredUsers[i].email === emailInput &&
-      registeredUsers[i].password === passwordInput
-    ) {
-      isMatching = true;
-      break;
-    }
-  }
-  return isMatching;
-}
-
-function addToSessionStorage() {
-  const emailInput = emailSignInEl.value.trim().toLowerCase();
-
-  const currentUser = registeredUsers.filter((obj) => {
-    return obj.email === emailInput;
-  });
-  sessionStorage.setItem("currentLoggedIn", JSON.stringify(currentUser[0]));
-}
-
-// If user try to login, then with the login info you should compare if we have such user in the registered user array. If we have the user with the right email and password, then you redirect user to the home.html
-// As well you should have in local storage an user object containing information about current user.
-// If in local storage current user object is empty, then don't allow user to go to home.html, yourMovies.html and profile.html. But otherwise if in local storage current user object is not empty then you should allow user going to the home.html, yourMovies.html and profile.html (If already registered user tries to access login, then you should redirect him to home.html)
-// Add in the home.html navigation bar a logout button.
-// To the logout button add such a functionality, so that it deletes in the local storage the current user object. After deleting the object redirect user to login.html
 
 visibleBtn.addEventListener("click", function () {
   if (formSignUpEl.style.display === "") {
