@@ -92,8 +92,6 @@ body {
 .navigation__link:active {
   background-color: var(--color-red);
 }
-/* .navigation__item.logout {
-} */
 
 /* Table styles*/
 .table-container {

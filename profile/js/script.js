@@ -1,5 +1,4 @@
-// CHECK IF CURRENT USER IS PRESENT
-
+// SELECT DOM ELEMENTS
 const profileDetails = document.querySelector(".profile__details");
 const resetEmailBtn = document.querySelector(".profile__button--left");
 const profileContainer = document.querySelector(".profile__container");
@@ -20,6 +19,23 @@ if (currentlyLoggedinUser) {
   }, 2000);
 }
 
+//// USER INPUT VALIDATION
+const validateEmail = function (elem) {
+  if (elem === null) return;
+  let valid = false;
+  const emailValue = elem.trim();
+
+  if (!isRequired(emailValue)) {
+    showError("Email cannot be empty");
+  } else if (!isEmailValid(emailValue)) {
+    showError("Email is not valid");
+  } else {
+    showSucess(`Your email has been updated to ${elem}`);
+    valid = true;
+  }
+  return valid;
+};
+
 const isEmailValid = (email) => {
   const regex =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -36,37 +52,35 @@ const showSucess = (message) => {
   alert(message);
 };
 
-const validateEmail = function (elem) {
-  if (elem === null) return;
+// GET DATA FROM LOCAL STORAGE (helper functions)
+function getFromLocalStorage(name) {
+  return JSON.parse(localStorage.getItem(name));
+}
+function setLocalStorage(name, obj) {
+  localStorage.setItem(name, JSON.stringify(obj));
+}
 
-  let valid = false;
-  const emailValue = elem.trim();
-
-  if (!isRequired(emailValue)) {
-    showError("Email cannot be empty");
-  } else if (!isEmailValid(emailValue)) {
-    showError("Email is not valid");
-  } else {
-    showSucess(`Your email has been updated to ${elem}`);
-    valid = true;
-  }
-  return valid;
-};
-
+// UPDATE EMAIL
 function updateEmail(changedEmail) {
-  const usersFromlocalStorage = JSON.parse(
-    localStorage.getItem("registeredUsers")
-  );
-  const registeredUsers = usersFromlocalStorage;
-
+  const registeredUsers = getFromLocalStorage("registeredUsers");
+  const yourMoviesList = getFromLocalStorage("yourMovieList");
   for (let i = 0; i < registeredUsers.length; i++) {
     if (registeredUsers[i].email === userDetails.email) {
       registeredUsers[i].email = changedEmail;
-      localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+      setLocalStorage("registeredUsers", registeredUsers);
       break;
     }
   }
 
+  if (yourMoviesList) {
+    for (let i = 0; i < yourMoviesList.length; i++) {
+      if (yourMoviesList[i].userEmail === userDetails.email) {
+        yourMoviesList[i].userEmail = changedEmail;
+        setLocalStorage("yourMovieList", yourMoviesList);
+        break;
+      }
+    }
+  }
   userDetails.email = changedEmail;
   sessionStorage.setItem("currentLoggedIn", JSON.stringify(userDetails));
 }
@@ -74,9 +88,9 @@ function updateEmail(changedEmail) {
 function renderProfile() {
   profileDetails.innerHTML = "";
   const accountDetail = `
-  <p><strong>Name: </strong>${userDetails.name}</p>
-  <p><strong>Surname: </strong>${userDetails.surname}</p>
-  <p><strong>Email: </strong>${userDetails.email}</p>
+      <p><strong>Name: </strong>${userDetails.name}</p>
+      <p><strong>Surname: </strong>${userDetails.surname}</p>
+      <p><strong>Email: </strong>${userDetails.email}</p>
   `;
   profileDetails.insertAdjacentHTML("beforeend", accountDetail);
 }

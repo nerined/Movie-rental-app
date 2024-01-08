@@ -1,9 +1,8 @@
 "use strict";
 
-// CHECK IF CURRENT USER IS PRESENT
-
 import { moviesList } from "../../data.js";
 
+// SELECT DOM ELEMENTS
 const tableBody = document.getElementsByTagName("tbody")[0];
 const logOutBtn = document.querySelector("#logOutBtn");
 const tableContainer = document.querySelector(".table-container");
@@ -12,30 +11,30 @@ const currentlyLoggedinUser = JSON.parse(
   sessionStorage.getItem("currentLoggedIn")
 );
 
-if (!currentlyLoggedinUser) {
+if (currentlyLoggedinUser) {
+  displayMovies();
+} else {
   tableContainer.innerHTML =
     "<p>You are not allowed to view these details. Please login first</p>";
   setTimeout(function () {
     window.location.href = "../login/login.html";
   }, 1000);
-} else {
-  displayMovies();
 }
-// yourMovieList = { userEmail: "neringa1991@kkk.com", movies: [] };
 
-function getList() {
+function getMoviesList() {
   let list = [];
   try {
     list = JSON.parse(localStorage.movies);
   } catch {
     list = moviesList;
+    localStorage.movies = JSON.stringify(list);
   }
   return list;
 }
 
-function getMovieList() {
-  let yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
-
+function getYourMoviesList() {
+  // let yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
+  let yourMovieList = [];
   try {
     let isPresentInArr = true;
     const arrFromLocalStorage = JSON.parse(localStorage.yourMovieList);
@@ -60,19 +59,8 @@ function getMovieList() {
   return yourMovieList;
 }
 
-logOutBtn.addEventListener("click", function () {
-  const usersFromSessionStorage = JSON.parse(
-    sessionStorage.getItem("currentLoggedIn")
-  );
-
-  if (usersFromSessionStorage) {
-    sessionStorage.clear();
-  }
-  window.location.href = "../login/login.html";
-});
-
 function displayMovies() {
-  const list = getList();
+  const list = getMoviesList();
   tableBody.innerHTML = "";
   let row = "";
 
@@ -96,15 +84,13 @@ function displayMovies() {
     <td><button class="table__button" data-index=${index} ${
       el.stock > 0 ? "" : "disabled"
     }>Rent</button></td> </tr>`;
-
-    // tableBody.insertAdjacentHTML("beforeend", row);
   });
   tableBody.innerHTML = row;
 
   document.querySelectorAll(".table__button").forEach(function (button) {
     button.addEventListener("click", function () {
       const movie = list[button.dataset.index];
-      const yourMovies = getMovieList();
+      const yourMovies = getYourMoviesList();
 
       for (let i = 0; i < yourMovies.length; i++) {
         if (yourMovies[i].userEmail === currentlyLoggedinUser.email) {
@@ -113,13 +99,19 @@ function displayMovies() {
         }
       }
       localStorage.yourMovieList = JSON.stringify(yourMovies);
-
       list[button.dataset.index].stock--;
       localStorage.movies = JSON.stringify(list);
-
       displayMovies();
     });
   });
 }
 
-displayMovies();
+logOutBtn.addEventListener("click", function () {
+  const usersFromSessionStorage = JSON.parse(
+    sessionStorage.getItem("currentLoggedIn")
+  );
+  if (usersFromSessionStorage) {
+    sessionStorage.clear();
+  }
+  window.location.href = "../login/login.html";
+});
