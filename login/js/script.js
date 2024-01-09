@@ -1,10 +1,8 @@
 "use strict";
 
 // SELECT DOM ELEMENTS
-// forms
 const formSignUpEl = document.querySelector("#form-signup");
 const formSignInEl = document.querySelector("#form-signin");
-// form inputs
 const emailSignInInput = document.querySelector("#email");
 const passwordSignInInput = document.querySelector("#current-password");
 const nameInput = document.querySelector("#new-name");
@@ -13,7 +11,6 @@ const emailSignUpInput = document.querySelector("#new-email");
 const emailConfirmEl = document.querySelector("#repeat-email");
 const passwordSignUpInput = document.querySelector("#new-password");
 const passwordConfirmInput = document.querySelector("#repeat-password");
-// messages and button
 const openRegisterFormBtn = document.querySelector(".form__button--visibility");
 const messageSuccessEl = document.querySelector(".info__message--success");
 const messageWarningEl = document.querySelector(".info__message--warning");
@@ -21,9 +18,7 @@ const messageErrorEl = document.querySelector(".info__message--error");
 const togglePassword = document.querySelector("#toggle-password");
 let registeredUsers = [];
 
-const usersFromlocalStorage = JSON.parse(
-  localStorage.getItem("registeredUsers")
-);
+const usersFromlocalStorage = getFromLocalStorage("registeredUsers");
 
 if (usersFromlocalStorage) {
   registeredUsers = usersFromlocalStorage;
@@ -220,6 +215,19 @@ formSignInEl.addEventListener(
   })
 );
 
+// HELPER FUNCTIONS TO GET DATA FROM STORAGE
+function setLocalStorage(name, obj) {
+  localStorage.setItem(name, JSON.stringify(obj));
+}
+
+function setSessionStorage(name, obj) {
+  sessionStorage.setItem(name, JSON.stringify(obj));
+}
+
+function getFromLocalStorage(name) {
+  return JSON.parse(localStorage.getItem(name));
+}
+
 // SIGN IN AND REGISTER FUNCTIONALITY
 function canLogin() {
   const emailInput = emailSignInInput.value.trim().toLowerCase();
@@ -237,6 +245,7 @@ function canLogin() {
       }
     }
   }
+
   return areCredentialsCorrect;
 }
 
@@ -250,6 +259,7 @@ function checkDuplicateEmail() {
       break;
     }
   }
+
   return isUnique;
 }
 
@@ -261,8 +271,9 @@ function addLoggedinUser(emailInput) {
   const unwrapObj = function ({ name, surname, email }) {
     return { name, surname, email };
   };
+
   const updatedObj = unwrapObj(currentUser[0]);
-  sessionStorage.setItem("currentLoggedIn", JSON.stringify(updatedObj));
+  setSessionStorage("currentLoggedIn", updatedObj);
 }
 
 function addNewUser() {
@@ -272,7 +283,7 @@ function addNewUser() {
   const email = emailSignUpInput.value.trim().toLowerCase();
   const user = { name, surname, password, email };
   registeredUsers.push(user);
-  localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+  setLocalStorage("registeredUsers", registeredUsers);
 }
 
 formSignInEl.addEventListener("submit", function (e) {
@@ -328,7 +339,6 @@ togglePassword.addEventListener("click", function (e) {
       ? "text"
       : "password";
   passwordSignInInput.setAttribute("type", type);
-
   this.classList.toggle("bi-eye");
 });
 

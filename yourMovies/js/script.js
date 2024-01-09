@@ -1,24 +1,25 @@
 "use strict";
 
+// SELECT DOM ELEMENTS
 const tableBody = document.getElementsByTagName("tbody")[0];
 const tableContainer = document.querySelector(".table__container");
 
-const currentlyLoggedinUser = JSON.parse(
-  sessionStorage.getItem("currentLoggedIn")
-);
+// CHECK IF USER IS LOGGED IN
+const currentlyLoggedinUser = getFromSessionStorage("currentLoggedIn");
 
-if (!currentlyLoggedinUser) {
+if (currentlyLoggedinUser) {
+  displayYourMovies();
+} else {
   tableContainer.innerHTML =
     "<p>You are not allowed to view these details. Please login first</p>";
   setTimeout(function () {
     window.location.href = "../login/login.html";
-  }, 2000);
-} else {
-  displayYourMovies();
+  }, 1000);
 }
 
+//HELPER FUNCTIONS
 function getMovieList() {
-  let yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
+  let yourMovieList = [];
 
   try {
     let isPresentInArr = true;
@@ -43,33 +44,40 @@ function getMovieList() {
 
   return yourMovieList;
 }
-function getList() {
+
+function getMoviesList() {
   let movieList = [];
+
   try {
     movieList = JSON.parse(localStorage.movies);
   } catch {
     movieList = [];
   }
+
   return movieList;
 }
 
-function updateList(id) {
-  const arr = getList();
+function updateMoviesList(id) {
+  const arr = getMoviesList();
   const objIndex = arr.findIndex((obj) => {
     return obj.imdbID === id;
   });
 
   arr[objIndex].stock++;
-  localStorage.movies = JSON.stringify(arr);
+  setLocalStorage("movies", arr);
 }
 
-// function stepUp(id) {
-//   displayYourMovies();
-// }
+function getFromLocalStorage(name) {
+  return JSON.parse(localStorage.getItem(name));
+}
 
-// function stepDown(id) {
-//   displayYourMovies();
-// }
+function setLocalStorage(name, obj) {
+  localStorage.setItem(name, JSON.stringify(obj));
+}
+
+function getFromSessionStorage(name) {
+  return JSON.parse(sessionStorage.getItem(name));
+}
 
 function limitNumberWithinRange(num) {
   const MIN = 12;
@@ -77,10 +85,10 @@ function limitNumberWithinRange(num) {
   return Math.min(Math.max(num, MIN), MAX);
 }
 
+// LOGGER FUNCTIONS
 function showError(input, message) {
   input.classList.remove("success");
   input.classList.add("error");
-
   const formField = input.parentElement.parentElement;
   const error = formField.querySelector(".error-message");
   error.textContent = message;
@@ -89,55 +97,56 @@ function showError(input, message) {
 function showSucess(input) {
   input.classList.remove("error");
   input.classList.add("success");
-
   const formField = input.parentElement.parentElement;
   const error = formField.querySelector(".error-message");
   error.textContent = "";
 }
 
+// MAIN FUNCTIONALITY
 function displayYourMovies() {
   const list = getMovieList();
-
   tableBody.innerHTML = "";
+  let row = "";
+
   for (let i = 0; i < list.length; i++) {
     if (
       list[i].userEmail === currentlyLoggedinUser.email &&
       list[i].movies.length !== 0
     ) {
-      let row = "";
-
-      list[0].movies.forEach((el, index) => {
-        row += `<tr class="table__row">
-    <td class="table__column--first" title=${el.title}>${el.title}</td>
-    <td>${el.genre}</td>
-    <td>
-      <div class="time__wrapper">
-        <button class="time__button time__button--down" data-index=${index}>&lt;</button
-        ><input
-          type="number"
-          name="number"
-          inputmode="numeric" 
-          class="time__input"
-          data-index=${index}
-          value="12"
-        /><button class="time__button time__button--up" data-index=${index}>&gt;</button>
-      </div>
-      <div class="error-message"> <div>
-    </td>
-    <td>${el.price}$</td>
-    <td>
-      <button class="table__button" data-index=${index} data-id=${el.imdbID}>Remove</button>
-    </td>
-  </tr>
+      list[i].movies.forEach((el, index) => {
+        row += `
+        <tr class="table__row">
+            <td class="table__column--first" title=${el.title}>${el.title}</td>
+            <td>${el.genre}</td>
+            <td>
+              <div class="time__wrapper">
+                 <button class="time__button time__button--down" data-index=${index}>&lt;</button>
+                 <input
+                   type="number"
+                   name="number"
+                   inputmode="numeric" 
+                   class="time__input"
+                   data-index=${index}
+                   value="12"/>
+                <button class="time__button time__button--up" data-index=${index}>&gt;</button>
+              </div>
+           <div class="error-message"> <div>
+           </td>
+           <td>${el.price}$</td>
+           <td>
+             <button class="table__button" data-index=${index} data-id=${el.imdbID}>Remove</button>
+           </td>
+       </tr>
   `;
       });
+
       tableBody.innerHTML = row;
     }
   }
 
   document.querySelectorAll(".table__button").forEach(function (button) {
     button.addEventListener("click", function () {
-      updateList(button.dataset.id);
+      updateMoviesList(button.dataset.id);
 
       for (let i = 0; i < list.length; i++) {
         if (
@@ -145,7 +154,7 @@ function displayYourMovies() {
           list[i].movies.length !== 0
         ) {
           list[i].movies.splice(button.dataset.index, 1);
-          localStorage.yourMovieList = JSON.stringify(list);
+          setLocalStorage("yourMovieList", list);
           displayYourMovies();
         }
       }
@@ -155,6 +164,7 @@ function displayYourMovies() {
   document.querySelectorAll(".time__input").forEach(function (input) {
     input.addEventListener("change", function (e) {
       let inputValue = Number(e.target.value.trim());
+
       if (inputValue % 12 === 0 && inputValue >= 12 && inputValue <= 168) {
         input.value = e.target.value;
         showSucess(input);
@@ -175,6 +185,7 @@ function displayYourMovies() {
       } else {
         updatedValue = Number(input.value) - 12;
       }
+
       input.value = limitNumberWithinRange(updatedValue);
     });
   });

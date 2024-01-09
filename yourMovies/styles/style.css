@@ -168,9 +168,6 @@ input::-webkit-inner-spin-button {
   outline: none;
 }
 
-/* .form_field.error input {
-  border: 1px solid var(--error-color);
-} */
 .time__input.error {
   border: 1px solid var(--error-color);
 }

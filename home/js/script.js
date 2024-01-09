@@ -7,9 +7,8 @@ const tableBody = document.getElementsByTagName("tbody")[0];
 const logOutBtn = document.querySelector("#logOutBtn");
 const tableContainer = document.querySelector(".table-container");
 
-const currentlyLoggedinUser = JSON.parse(
-  sessionStorage.getItem("currentLoggedIn")
-);
+// CHECK IF USER IS LOGGED IN
+const currentlyLoggedinUser = getFromSessionStorage("currentLoggedIn");
 
 if (currentlyLoggedinUser) {
   displayMovies();
@@ -21,6 +20,7 @@ if (currentlyLoggedinUser) {
   }, 1000);
 }
 
+//HELPER FUNCTIONS
 function getMoviesList() {
   let list = [];
   try {
@@ -29,15 +29,16 @@ function getMoviesList() {
     list = moviesList;
     localStorage.movies = JSON.stringify(list);
   }
+
   return list;
 }
 
 function getYourMoviesList() {
-  // let yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
   let yourMovieList = [];
+
   try {
-    let isPresentInArr = true;
     const arrFromLocalStorage = JSON.parse(localStorage.yourMovieList);
+    let isPresentInArr = true;
 
     for (let i = 0; i < arrFromLocalStorage.length; i++) {
       isPresentInArr =
@@ -50,7 +51,6 @@ function getYourMoviesList() {
         movies: [],
       });
     }
-
     yourMovieList = arrFromLocalStorage;
   } catch {
     yourMovieList = [{ userEmail: currentlyLoggedinUser.email, movies: [] }];
@@ -59,32 +59,44 @@ function getYourMoviesList() {
   return yourMovieList;
 }
 
+function setLocalStorage(name, obj) {
+  localStorage.setItem(name, JSON.stringify(obj));
+}
+
+function getFromSessionStorage(name) {
+  return JSON.parse(sessionStorage.getItem(name));
+}
+
+// MAIN FUNCTIONALITY
 function displayMovies() {
   const list = getMoviesList();
   tableBody.innerHTML = "";
   let row = "";
 
   list.forEach((el, index) => {
-    row += `<tr><td class="table__column--first">${el.title}</td>
-    <td>${el.genre}</td>
-    <td>${el.price}$</td>
-    <td>
-      <img
-        src =
-          ${
-            el.stock > 0
-              ? "dir/../../assets/icon-check.png"
-              : "dir/../../assets/icon-cross.png"
-          }
-
-        alt="Stock icon"
-        class="table__icon"
-      />
-    </td>
-    <td><button class="table__button" data-index=${index} ${
+    row += `<tr class="table__row"><td class="table__column--first">${
+      el.title
+    }</td>
+      <td>${el.genre}</td>
+      <td>${el.price}$</td>
+      <td>
+        <img
+          src =
+            ${
+              el.stock > 0
+                ? "dir/../../assets/icon-check.png"
+                : "dir/../../assets/icon-cross.png"
+            }
+  
+          alt="Stock icon"
+          class="table__icon"
+        />
+      </td>
+      <td><button class="table__button" data-index=${index} ${
       el.stock > 0 ? "" : "disabled"
     }>Rent</button></td> </tr>`;
   });
+
   tableBody.innerHTML = row;
 
   document.querySelectorAll(".table__button").forEach(function (button) {
@@ -98,20 +110,17 @@ function displayMovies() {
           break;
         }
       }
-      localStorage.yourMovieList = JSON.stringify(yourMovies);
+
+      setLocalStorage("yourMovieList", yourMovies);
       list[button.dataset.index].stock--;
-      localStorage.movies = JSON.stringify(list);
+      setLocalStorage("movies", list);
       displayMovies();
     });
   });
 }
 
+// LOGOUT BUTTON FUNCTIONALITY
 logOutBtn.addEventListener("click", function () {
-  const usersFromSessionStorage = JSON.parse(
-    sessionStorage.getItem("currentLoggedIn")
-  );
-  if (usersFromSessionStorage) {
-    sessionStorage.clear();
-  }
+  sessionStorage.clear();
   window.location.href = "../login/login.html";
 });

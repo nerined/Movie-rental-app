@@ -1,12 +1,13 @@
+"use strict";
+
 // SELECT DOM ELEMENTS
 const profileDetails = document.querySelector(".profile__details");
 const resetEmailBtn = document.querySelector(".profile__button--left");
 const profileContainer = document.querySelector(".profile__container");
 let userDetails = {};
 
-const currentlyLoggedinUser = JSON.parse(
-  sessionStorage.getItem("currentLoggedIn")
-);
+// CHECK IF USER IS LOGGED IN
+const currentlyLoggedinUser = getFromSessionStorage("currentLoggedIn");
 
 if (currentlyLoggedinUser) {
   userDetails = currentlyLoggedinUser;
@@ -33,6 +34,7 @@ const validateEmail = function (elem) {
     showSucess(`Your email has been updated to ${elem}`);
     valid = true;
   }
+
   return valid;
 };
 
@@ -52,18 +54,27 @@ const showSucess = (message) => {
   alert(message);
 };
 
-// GET DATA FROM LOCAL STORAGE (helper functions)
+// HELPER FUNCTIONS
 function getFromLocalStorage(name) {
   return JSON.parse(localStorage.getItem(name));
 }
+
 function setLocalStorage(name, obj) {
   localStorage.setItem(name, JSON.stringify(obj));
 }
 
-// UPDATE EMAIL
+function getFromSessionStorage(name) {
+  return JSON.parse(sessionStorage.getItem(name));
+}
+
+function setSessionStorage(name, obj) {
+  sessionStorage.setItem(name, JSON.stringify(obj));
+}
+
 function updateEmail(changedEmail) {
   const registeredUsers = getFromLocalStorage("registeredUsers");
   const yourMoviesList = getFromLocalStorage("yourMovieList");
+
   for (let i = 0; i < registeredUsers.length; i++) {
     if (registeredUsers[i].email === userDetails.email) {
       registeredUsers[i].email = changedEmail;
@@ -81,10 +92,12 @@ function updateEmail(changedEmail) {
       }
     }
   }
+
   userDetails.email = changedEmail;
-  sessionStorage.setItem("currentLoggedIn", JSON.stringify(userDetails));
+  setSessionStorage("currentLoggedIn", userDetails);
 }
 
+// MAIN FUNCTIONALITY
 function renderProfile() {
   profileDetails.innerHTML = "";
   const accountDetail = `
@@ -92,12 +105,14 @@ function renderProfile() {
       <p><strong>Surname: </strong>${userDetails.surname}</p>
       <p><strong>Email: </strong>${userDetails.email}</p>
   `;
+
   profileDetails.insertAdjacentHTML("beforeend", accountDetail);
 }
 
 resetEmailBtn.addEventListener("click", function () {
   const email = prompt("Please input a new value for email");
   const isEmailValid = validateEmail(email);
+
   if (isEmailValid) {
     updateEmail(email);
     renderProfile();
