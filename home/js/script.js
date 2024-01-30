@@ -119,7 +119,7 @@ function displayMovies() {
   });
 }
 
-// LOGOUT FUNCTIONALITY
+// LOGOUT FUNCTIONALIT
 logOutBtn.addEventListener("click", function () {
   sessionStorage.clear();
   window.location.href = "../login/login.html";
